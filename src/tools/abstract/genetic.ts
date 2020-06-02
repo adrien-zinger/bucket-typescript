@@ -24,20 +24,22 @@ export abstract class GeneticProcessSync<T> {
     protected abstract score(adn: T): number;
 
     public run() {
-        for (let person of this._generation)
-            person.score = this.score(person.adn);
-        this._generation = this._generation.sort((a, b) => a.score - b.score).slice(0, this.MAX_POPULATION / 2);
+        this._generation = this._generation.slice(0, this.MAX_POPULATION / 2);
         this.populate();
     }
 
-    private populate() {
+    protected populate() {
         while (this._generation.length < this.MAX_POPULATION)
             if (Math.random() < 0.05)
                 this._generation.push(new Person(this.mutation()));
             else
                 this._generation.push(new Person(this.reproduction(
-                    this._generation[Random.range(0, this._generation.length - 1)].adn,
-                    this._generation[Random.range(0, this._generation.length - 1)].adn)));
+                    Object.assign([], this._generation[Random.range(0, this._generation.length - 1)].adn),
+                    Object.assign([], this._generation[Random.range(0, this._generation.length - 1)].adn))));
+        for (let person of this._generation)
+            if (person.score == 0)
+                person.score = this.score(person.adn);
+        this._generation.sort((a, b) => b.score - a.score)
     }
 }
 

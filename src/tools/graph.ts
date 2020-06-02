@@ -14,7 +14,11 @@ export class Vertex {
  */
 export class GraphNO {
     private matrix: Map<string, Edge[]> | null = null;
-    constructor(public vertices: Vertex[], public edges: Edge[]) {}
+    constructor(public vertices: Vertex[], public edges: Edge[], private keepMatrix = false) {
+        if (keepMatrix) {
+            this.initMatrix();
+        }
+    }
 
     public initMatrix() {
         if (this.matrix != null) return;
@@ -32,7 +36,7 @@ export class GraphNO {
     }
 
     public clearMatrix() {
-        this.matrix = null;
+        if (!this.keepMatrix) this.matrix = null;
     }
 
     public getAdjacents(vertex: Vertex): Edge[] {

@@ -8,8 +8,9 @@ export default class GenVCProblem extends GeneticProcessSync<Vertex[]> {
     private input: GraphNO;
     constructor(input: GraphNO) {
         let vertices = approximate(input);
-        super([vertices], 100);
+        super([vertices], 20, false);
         this.input = input;
+        this.populate();
     }
 
     protected reproduction(vertices: Vertex[]): Vertex[] {
@@ -35,5 +36,13 @@ export default class GenVCProblem extends GeneticProcessSync<Vertex[]> {
 
     public getScore(): number {
         return this._generation[0].score;
+    }
+
+    public getGeneration(): [Vertex[], number][] {
+        let ret: [Vertex[], number][] = [];
+        for (let person of this._generation) {
+            ret.push([person.adn, person.score]);
+        }
+        return ret;
     }
 }

@@ -1,11 +1,10 @@
 {
     "compilerOptions": {
       "target": "ES5",                       /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017','ES2018' or 'ESNEXT'. */
-      "module": "amd",                     /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
+      "module": "commonjs",                     /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
       "lib": ["esnext", "es2015", "es2016", "es2017"],    /* Specify library files to be included in the compilation. */
       "sourceMap": false,                        /* Generates corresponding '.map' file. */
-      "outFile": "${outDir}/vcgenetic",                       /* Concatenate and emit output to single file. */
-      "outDir": "./build",                      /* Redirect output structure to the directory. */
+      "outDir": "build/vcgenetic",                       /* Concatenate and emit output to single file. */
       "composite": true,                     /* Enable project compilation */
       "removeComments": true,                /* Do not emit comments to output. */
       // "downlevelIteration": true,            /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */
@@ -47,7 +46,6 @@
         "src/internal/GeneticVC.impl.ts",
         "src/tools/graph.ts",
         "src/tools/random.ts",
-        "src/tools/readline.ts",
         "src/tools/algos/VCApproximation.ts",
         "src/tools/abstract/genetic.ts",
         "src/tools/promisesPool.ts",
