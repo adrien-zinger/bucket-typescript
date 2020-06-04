@@ -1,9 +1,9 @@
 import { approximate } from "../tools/algos/VCApproximation";
-import { GeneticProcessSync } from "../tools/abstract/genetic";
+import { GeneticProcessASync } from "../tools/abstract/genetic";
 import { GraphNO, Vertex } from "../tools/graph";
 import Random from "../tools/random";
 
-export default class GenVCProblem extends GeneticProcessSync<Vertex[]> {
+export default class GenVCProblem extends GeneticProcessASync<Vertex[]> {
 
     private input: GraphNO;
     constructor(input: GraphNO) {

@@ -45,9 +45,9 @@ export abstract class GeneticProcessSync<T> {
 
 export abstract class GeneticProcessASync<T> extends GeneticProcessSync<T> {
     protected constructor (generation: T[],
-        protected readonly MAX_POPULATION: number) {
-        super(generation, MAX_POPULATION, false);
-        this.apopulate();
+        protected readonly MAX_POPULATION: number, populate: boolean = true) {
+        super(generation, MAX_POPULATION, populate);
+        if (populate) this.apopulate();
     }
 
     protected abstract reproduction(a: T, b: T): T;
