@@ -1,4 +1,4 @@
-import { GraphNO, Vertex, Edge} from "../src/tools/graph";
+import { GraphNO, Vertex, Edge, Vertices, Edges} from "../src/tools/graph";
 import { prim } from "../src/tools/algos/ACM";
 
 describe('Test ACM algorithms', () => {
@@ -21,22 +21,28 @@ describe('Test ACM algorithms', () => {
           ['g', 'h', 1],
           ['h', 'i', 7]
       ];
-      let vertices: Vertex[] = [];
-      let edges: Edge[] = [];
+      let vertices: Vertices = new Vertices();
+      let edges: Edges = new Edges(vertices);
       for (let n of vertexNames)
-        vertices.push(new Vertex(n));
+        vertices.add(n[0], 0);
       for (let e of edgesName)
-        edges.push(new Edge(e[0], e[1], e[2]));
+        edges.add(e[0], e[1], e[2]);
       let visited = '';
       const g = new GraphNO(vertices, edges);
-      prim(g, vertex => visited += ' ' + vertex.id, 'a');
+      prim(new Set<string>(vertexNames),
+        (vertexId: string) => {
+          const e = edges.neighboor(vertexId);
+          let ret: [string, number][] = [];
+          e.forEach(t => ret.push([t.b.id, t.w]));
+          return ret;
+        },
+        vertex => visited += ' ' + vertex, 'a');
       visited = visited.substring(1);
-      expect(visited).toEqual("a b c i f g h d e");
+      expect(visited).toEqual("a b h g f c i d e");
 
       // Test the weight while we have a list
-      g.initMatrix();
       let retVertices: Vertex[] = [];
       visited.split(' ').forEach(element => retVertices.push(new Vertex(element)));
-      expect(g.getTotalWeight(retVertices)).toEqual(26);
+      expect(g.getTotalWeight(retVertices)).toEqual(33);
   });
 });

@@ -13,6 +13,16 @@ import { prim } from "./ACM";
  */
 export function approximate(input: GraphNO): Vertex[] {
     let vertices: Vertex[] = [];
-    prim(input, (v: Vertex) => vertices.push(v));
+    let setNames: Set<string> = new Set();
+    input.vertices.foreach((v: Vertex) => setNames.add(v.id));
+    prim(setNames,(vertexId: string) => {
+        const e = input.edges.neighboor(vertexId);
+        let ret: [string, number][] = [];
+        e.forEach(t => ret.push([t.b.id, t.w]));
+        return ret;
+      },
+      (vertexId: string) =>
+        vertices.push(input.vertices.get(vertexId)!)
+    );
     return vertices;
 }

@@ -1,18 +1,20 @@
 import GenVCProblem from "./internal/GeneticVC.impl";
-import { GraphNO, Vertex, Edge } from "./tools/graph";
+import { GraphNO, Vertex, Vertices, Edges } from "./tools/graph";
 import Random from "./tools/random";
 
 function createCompleteGraph(): GraphNO {
     const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'];
-    let vertices: Vertex[] = [];
-    let edges: Edge[] = [];
+    let vertices: Vertices = new Vertices();
+    let edges: Edges = new Edges(vertices);
     for (let i = 0; i < alphabet.length; ++i) {
         const name: string = alphabet[i];
-        vertices.forEach(vertex => edges.push(
-            new Edge(vertex.id, name, Random.range(0, 15))));
-        vertices.push(new Vertex(name));
+        vertices.add(name, 0);
+        vertices.foreach(vertex => {
+            if (vertex.id != name)
+                edges.add(vertex.id, name, Random.range(0, 15));
+        });
     }
-    return new GraphNO(vertices, edges, true);
+    return new GraphNO(vertices, edges);
 }
 
 function main() {
