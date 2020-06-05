@@ -1,16 +1,23 @@
+/**
+ * Genetic approach to solve the travelling salesman problem
+ * 
+ * 
+ */
+
+
+
 import { approximate } from "../tools/algos/VCApproximation";
 import { GeneticProcessASync } from "../tools/abstract/genetic";
 import { GraphNO, Vertex } from "../tools/graph";
 import Random from "../tools/random";
 
-export default class GenVCProblem extends GeneticProcessASync<Vertex[]> {
+export default class GenTSProblem extends GeneticProcessASync<Vertex[]> {
 
     private input: GraphNO;
     constructor(input: GraphNO) {
         let vertices = approximate(input);
-        super([vertices], 20, false);
+        super([vertices], 20);
         this.input = input;
-        this.populate();
     }
 
     protected reproduction(vertices: Vertex[]): Vertex[] {
@@ -27,7 +34,8 @@ export default class GenVCProblem extends GeneticProcessASync<Vertex[]> {
     }
 
     protected mutation(): Vertex[] {
-        return approximate(this.input);
+        let ret = approximate(this.input);
+        return ret;
     }
 
     public getPath(): Vertex[] {
@@ -44,5 +52,12 @@ export default class GenVCProblem extends GeneticProcessASync<Vertex[]> {
             ret.push([person.adn, person.score]);
         }
         return ret;
+    }
+
+    public async process(times: number = 1) {
+        for (let i = 0; i < times; ++i) {
+            await this.apopulate();
+            await this.arun();
+        }
     }
 }
