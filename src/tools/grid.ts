@@ -16,14 +16,14 @@ export function getPos(index: number, gridwidth: number): [number, number] {
 }
 
 export default class Grid<T extends string | number> {
-    private matrix: T[]; // the current matrix container
+    private datas: Map<number, T> = new Map(); // the current matrix container
     
     constructor(
         public readonly width: number, // the current matrix width
         public readonly height: number, // the current matrix height
         public readonly defaultValue: T | undefined = undefined // default value to return if get[x, y] not possible
         ) {
-        this.matrix = [];
+        if (width <= 0 || height <= 0) throw new Error("Invalid negative width or height");
     }
 
     /**
@@ -32,7 +32,7 @@ export default class Grid<T extends string | number> {
     public init(func: (x: number, y: number) => T) {
         for (let y = 0; y < this.height; ++y)
             for (let x = 0; x < this.width; ++x)
-                this.matrix[getIndex(x, y, this.width)] = func(x, y);
+                this.datas.set(getIndex(x, y, this.width), func(x, y));
     }
 
     /**
@@ -65,14 +65,15 @@ export default class Grid<T extends string | number> {
      */
     public get(x: number, y: number): T | undefined {
         if (this.isIn(x, y)) {
-            return this.matrix[getIndex(x, y, this.width)];
+            const ret = this.datas.get(getIndex(x, y, this.width));
+            if (ret != undefined) return ret;
         }
         return this.defaultValue;
     }
 
     public set(x: number, y: number, value: T): boolean {
         if (this.isIn(x, y)) {
-            this.matrix[getIndex(x, y, this.width)] = value;
+            this.datas.set(getIndex(x, y, this.width), value);
             return true;
         }
         return false;
@@ -87,12 +88,19 @@ export default class Grid<T extends string | number> {
                 line = '';
                 currentLine = y;
             }
-            const index = getIndex(x, y, this.width);
             if (line == '')
-                line += this.matrix[index];
+                line += this.get(x, y);
             else
-                line += separator + this.matrix[index];
+                line += separator + this.get(x, y);
         });
         printer(line);
+    }
+
+    public get truesize(): number {
+        return this.datas.size;
+    }
+
+    public get size(): number {
+        return this.width * this.height;
     }
 }
