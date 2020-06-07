@@ -131,6 +131,10 @@ export class Vertices {
     public foreach(action: (vertex: Vertex) => void) {
         this.verticesIds.forEach((cost: number, id: string) => action(new Vertex(id, cost)));
     }
+
+    public get size() {
+        return this.verticesIds.size;
+    }
 }
 
 /**
