@@ -4,8 +4,6 @@
  * 
  */
 
-
-
 import { approximate } from "../tools/algos/VCApproximation";
 import { GeneticProcessASync } from "../tools/abstract/genetic";
 import { GraphNO, Vertex } from "../tools/graph";
@@ -39,18 +37,17 @@ export default class GenTSProblem extends GeneticProcessASync<Vertex[]> {
     }
 
     public getPath(): Vertex[] {
-        return this._generation[0].adn;
+        return this._generation[0][0];
     }
 
     public getScore(): number {
-        return this._generation[0].score;
+        return this._generation[0][1];
     }
 
     public getGeneration(): [Vertex[], number][] {
         let ret: [Vertex[], number][] = [];
-        for (let person of this._generation) {
-            ret.push([person.adn, person.score]);
-        }
+        for (let person of this._generation)
+            ret.push([person[0], person[1]]);
         return ret;
     }
 

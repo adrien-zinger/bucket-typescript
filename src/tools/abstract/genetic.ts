@@ -7,17 +7,10 @@ import PromisePool from "../promisesPool";
  */
 
 /**
- * Person of a population that has a score and an adn
- */
-class Person<T> {
-    constructor(public adn: T, public score: number = 0) {};
-}
-
-/**
  * Synchronous genetic abstract class with T as a adn representation
  */
 export abstract class GeneticProcessSync<T> {
-    protected _generation: Person<T>[] = [];
+    protected _generation: [T, number][] = [];
 
     /**
      * Create a population ready to get processed
@@ -33,7 +26,7 @@ export abstract class GeneticProcessSync<T> {
         populate: boolean = true) {
         for (const g of generation)
             if (this._generation.length < this.MAX_POPULATION)
-                this._generation.push(new Person(g));
+                this._generation.push([g, 0]);
             else break;
         if (populate)
             this.populate();
@@ -70,17 +63,21 @@ export abstract class GeneticProcessSync<T> {
     }
 
     protected populate() {
+        const L = this._generation.length;
+        Random.shuffle(this._generation);
+        let i: number = 0;
         while (this._generation.length < this.MAX_POPULATION)
             if (Math.random() < 0.05)
-                this._generation.push(new Person(this.mutation()));
-            else
-                this._generation.push(new Person(this.reproduction(
-                    Object.assign([], this._generation[Random.range(0, this._generation.length - 1)].adn),
-                    Object.assign([], this._generation[Random.range(0, this._generation.length - 1)].adn))));
+                this._generation.push([this.mutation(), 0]);
+            else {
+                this._generation.push([this.reproduction(
+                    Object.assign([], this._generation[i++ % L][0]),
+                    Object.assign([], this._generation[i++ % L][0])), 0]);
+            }
         for (let person of this._generation)
-            if (person.score == 0)
-                person.score = this.score(person.adn);
-        this._generation.sort((a, b) => b.score - a.score)
+            if (person[1] == 0)
+                person[1] = this.score(person[0]);
+        this._generation.sort((a, b) => b[1] - a[1]);
     }
 }
 
@@ -135,16 +132,17 @@ export abstract class GeneticProcessASync<T> extends GeneticProcessSync<T> {
         let promisePool: PromisePool<T> = new PromisePool<T>(12);
         let newpeople: Promise<T>[] = [];
         const L = this._generation.length;
-        for (let i = 0; i < this.MAX_POPULATION - L; ++i) {
+        Random.shuffle(this._generation);
+        for (let i = 0; i < this.MAX_POPULATION - L; ++i)
             if (Math.random() < 0.05) newpeople.push(promisePool.push(this.applyMutation, this));
-            else newpeople.push(promisePool.push(this.applyReproduction, this,
-                Object.assign([], this._generation[Random.range(0, this._generation.length - 1)].adn),
-                Object.assign([], this._generation[Random.range(0, this._generation.length - 1)].adn)));
-        }
+            else
+                newpeople.push(promisePool.push(this.applyReproduction, this,
+                Object.assign([], this._generation[i++ % L][0]),
+                Object.assign([], this._generation[i++ % L][0])));
         await promisePool.await();
         await Promise.all(newpeople).then((adns: T[]) => {
             for (const adn of adns)
-                this._generation.push(new Person(adn));
+                this._generation.push([adn, 0]);
         });
         await this.setScores();
     }
@@ -153,12 +151,12 @@ export abstract class GeneticProcessASync<T> extends GeneticProcessSync<T> {
         let promisePool: PromisePool<number> = new PromisePool<number>(12);
         let scores: Promise<number>[] = [];
         for (let person of this._generation)
-            scores.push(promisePool.push(this.applyScore, this, person.adn));
+            scores.push(promisePool.push(this.applyScore, this, person[0]));
         await promisePool.await();
         await Promise.all(scores).then((scores: number[]) => {
             for (let i = 0; i < scores.length; ++i)
-                this._generation[i].score = scores[i];
+                this._generation[i][1] = scores[i];
         });
-        this._generation.sort((a, b) => b.score - a.score);
+        this._generation.sort((a, b) => b[1] - a[1]);
     }
 }
