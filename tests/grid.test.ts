@@ -1,9 +1,9 @@
-import Matrix from "../src/tools/matrix";
+import Grid from "../src/tools/grid";
 
 describe('Test matrix', () => {
-  it('simple matrix create and print', () => {
+  it('simple grid create and print', () => {
     let inputLines: string[] = "a b c\nd e f\ng h i".split('\n')!;
-    let matrix: Matrix = new Matrix(3, 3);
+    let matrix: Grid<string> = new Grid(3, 3);
     let currentLine: string[] = inputLines.shift()!.split(' ')!;
     matrix.init(() => {
         if (currentLine.length==0) {
@@ -18,8 +18,8 @@ describe('Test matrix', () => {
     expect(out).toEqual("a b c\nd e f\ng h i\n");
   });
 
-  it('simple matrix check get and is in', () => {
-    let matrix: Matrix = new Matrix(3, 3);
+  it('simple grid check get and is in', () => {
+    let matrix: Grid<string> = new Grid(3, 3, '');
     matrix.init(() => '.');
     expect(matrix.get(0, 0)).toEqual('.');
     expect(matrix.get(0, 2)).toEqual('.');

@@ -1,4 +1,4 @@
-import Matrix from "../tools/matrix"
+import Grid from "../tools/grid"
 import KirkGame from "./KirkGame"
 
 /**
@@ -39,7 +39,7 @@ export default class KirkIsSearching {
         return null;
     }
 
-    private isCurrentDestinationValid(maze: Matrix, kirkPos: [number, number]): boolean {
+    private isCurrentDestinationValid(maze: Grid<string>, kirkPos: [number, number]): boolean {
         const game: KirkGame = KirkGame.getGame();
         const currentDest = this.getCurrentDestination();
         return currentDest != null
@@ -55,7 +55,7 @@ export default class KirkIsSearching {
         return this._commandRoom!;
     }
 
-    private peekDestination_CommandRoomFoundButTooLong(maze: Matrix, kirkPos: [number, number]): [number, number] {
+    private peekDestination_CommandRoomFoundButTooLong(maze: Grid<string>, kirkPos: [number, number]): [number, number] {
         console.log("peekDestination_CommandRoomFoundButTooLong")
         const game: KirkGame = KirkGame.getGame();
         if (this.isCurrentDestinationValid(maze, kirkPos))
@@ -82,7 +82,7 @@ export default class KirkIsSearching {
         return ret;
     }
 
-    private onCommandRoomFound(maze: Matrix, kirkPos: [number, number]): [number, number] {
+    private onCommandRoomFound(maze: Grid<string>, kirkPos: [number, number]): [number, number] {
         const game: KirkGame = KirkGame.getGame();
         const path: [number, number][] = game.findPath(
             this._commandRoom!, this.teleporter, true); // search a path with no unknown destinations
@@ -96,7 +96,7 @@ export default class KirkIsSearching {
         return this.peekDestination_CommandRoomFoundReadyToGo(kirkPos);
     }
 
-    private lookForTheCommandRoom(maze: Matrix, kirkPos: [number, number]): boolean {
+    private lookForTheCommandRoom(maze: Grid<string>, kirkPos: [number, number]): boolean {
         for (let x = kirkPos[0] - 2; x <= kirkPos[1] + 2; ++x)
             for (let y = kirkPos[1] - 2; y <= kirkPos[1] + 2; ++y) {
                 //console.log("check " + x + " " + y + ":" + maze.get(x, y));
@@ -114,7 +114,7 @@ export default class KirkIsSearching {
      * @param maze maze
      * @param kirkPos position of kirk
      */
-    private peekDestination_SearchingTheCommandRoom(maze: Matrix, kirkPos: [number, number]): [number, number] {
+    private peekDestination_SearchingTheCommandRoom(maze: Grid<string>, kirkPos: [number, number]): [number, number] {
         console.log("searching command room")
         if (this.lookForTheCommandRoom(maze, kirkPos)) {
             //console.log("command found");
@@ -127,7 +127,8 @@ export default class KirkIsSearching {
         let ret: [number, number] = [ random(0, maze.width - 1),
             random(0, maze.height - 1) ];
         const invalid = ['.', '#', 'T']; // specific to the current problem
-        while (invalid.includes(maze.get(ret[0], ret[1]))
+        while (maze.get(ret[0], ret[1]) != undefined
+        && invalid.includes(maze.get(ret[0], ret[1])!)
         || this.history.includes(ret[0] + ' ' + ret[1])) {
             ret = [random(0, maze.width - 1), random(0, maze.height - 1)];
         }
@@ -139,7 +140,7 @@ export default class KirkIsSearching {
     /**
      * Get the next destination to kirk
      */
-    public peekNewDestination(maze: Matrix, kirkPos: [number, number]): [number, number] {
+    public peekNewDestination(maze: Grid<string>, kirkPos: [number, number]): [number, number] {
         console.log("state", State[this._state]);
         switch(this._state) {
             case State.searchingTheCommandRoom:

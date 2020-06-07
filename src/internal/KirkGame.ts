@@ -1,5 +1,5 @@
 // Game singleton
-import Matrix from "../tools/matrix";
+import Grid from "../tools/grid";
 import * as astar from "../tools/algos/astar";
 import KirkIsSearching from "./kirkSearchingDest";
 
@@ -7,7 +7,7 @@ import KirkIsSearching from "./kirkSearchingDest";
  * Kirk game singleton
  */
 export default class KirkGame {
-    private _maze: Matrix | null = null; // the grid maze
+    private _maze: Grid<string> | null = null; // the grid maze
     private _alarm: number = 0; // the alarm value
     private kirkPos: [number, number] = [-1, -1]; // current kirk position
     private static _instance: KirkGame | null = null; // the instance of the game
@@ -33,17 +33,18 @@ export default class KirkGame {
         return this._alarm;
     }
 
-    private get maze(): Matrix {
+    private get maze(): Grid<string> {
         return this._maze!; // impossible to have a null matrix here
     }
 
     private initMaze(width: number, height: number): void {
-        this._maze = new Matrix(width, height);
+        this._maze = new Grid(width, height);
     }
 
     private get(pos: [number, number]): string {
         if (this._maze != null) {
-            return this.maze.get(pos[0], pos[1]);
+            const ret = this.maze.get(pos[0], pos[1])
+            if (ret != undefined) return ret;
         }
         return '';
     }
@@ -52,7 +53,7 @@ export default class KirkGame {
         const node: astar.ANode = new astar.ANode(from[0], from[1]);
         return astar.process(node, to[0], to[1], (x: number, y: number) => {
             let res: astar.ANode[] = [];
-            let invalid = ['', '#']; // todo peut être problématique
+            let invalid = ['', '#', undefined];
             if (sure) invalid.push('?');
             if (!invalid.includes(this.maze.get(x, y - 1)))
                 res.push(new astar.ANode(x, y - 1));
