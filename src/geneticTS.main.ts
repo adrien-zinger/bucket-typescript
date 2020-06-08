@@ -1,8 +1,8 @@
 import GenTSProblem from "./internal/GeneticTS.impl";
-import { GraphNO, Vertex, Vertices, Edges } from "./tools/graph";
+import { Graph, Vertex, Vertices, Edges } from "./tools/graph";
 import Random from "./tools/random";
 
-function createCompleteGraph(): GraphNO {
+function createCompleteGraph(): Graph {
     const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'];
     let vertices: Vertices = new Vertices();
     let edges: Edges = new Edges(vertices);
@@ -14,11 +14,11 @@ function createCompleteGraph(): GraphNO {
                 edges.add(vertex.id, name, Random.range(0, 15));
         });
     }
-    return new GraphNO(vertices, edges);
+    return new Graph(vertices, edges);
 }
 
 function main() {
-    let graph: GraphNO = createCompleteGraph();
+    let graph: Graph = createCompleteGraph();
     //console.log("work with generated graph", graph.vertices, graph.edges);
     let vc: GenTSProblem = new GenTSProblem(graph);
     console.log("run once to get all population");

@@ -41,6 +41,7 @@ export function prim(allVerticeIds: Set<string>,
     vertices.set(first.id, first);
     while (allVerticeIds.size > 0) {
         const u = extractMin(vertices);
+        if (u.key == Infinity) throw new Error("Error while extracting minimum...");
         allVerticeIds.delete(u.id);
         if (onVertexVisit != undefined)
             onVertexVisit(u.id);

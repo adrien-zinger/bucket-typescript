@@ -5,13 +5,13 @@
  * 
  */
 
-import { GraphNO, Vertex} from "../graph";
+import { Graph, Vertex} from "../graph";
 import { prim } from "./ACM";
 
 /**
  * Return a list of vertices ordered for vc
  */
-export function approximate(input: GraphNO): Vertex[] {
+export function approximate(input: Graph): Vertex[] {
     let vertices: Vertex[] = [];
     let setNames: Set<string> = new Set();
     input.vertices.foreach((v: Vertex) => setNames.add(v.id));

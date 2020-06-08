@@ -6,13 +6,13 @@
 
 import { approximate } from "../tools/algos/VCApproximation";
 import { GeneticProcessASync } from "../tools/abstract/genetic";
-import { GraphNO, Vertex } from "../tools/graph";
+import { Graph, Vertex } from "../tools/graph";
 import Random from "../tools/random";
 
 export default class GenTSProblem extends GeneticProcessASync<Vertex[]> {
 
-    private input: GraphNO;
-    constructor(input: GraphNO) {
+    private input: Graph;
+    constructor(input: Graph) {
         let vertices = approximate(input);
         super([vertices], 20);
         this.input = input;

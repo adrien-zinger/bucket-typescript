@@ -1,4 +1,4 @@
-import { GraphNO, Vertex, Edge, Vertices, Edges} from "../src/tools/graph";
+import { Graph, Vertex, Edge, Vertices, Edges} from "../src/tools/graph";
 import { prim } from "../src/tools/algos/ACM";
 
 describe('Test ACM algorithms', () => {
@@ -28,12 +28,12 @@ describe('Test ACM algorithms', () => {
       for (let e of edgesName)
         edges.add(e[0], e[1], e[2]);
       let visited = '';
-      const g = new GraphNO(vertices, edges);
+      const g = new Graph(vertices, edges);
       prim(new Set<string>(vertexNames),
         (vertexId: string) => {
           const e = edges.neighboor(vertexId);
           let ret: [string, number][] = [];
-          e.forEach(t => ret.push([t.b.id, t.w]));
+          e.forEach(t => ret.push([t.b.id, t.w]));       
           return ret;
         },
         vertex => visited += ' ' + vertex, 'a');
