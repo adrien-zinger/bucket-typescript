@@ -1,4 +1,4 @@
-import { Graph, Vertex, Edge, Vertices, Edges} from "../src/tools/graph";
+import { Graph, Vertex, Vertices, Edges} from "../src/tools/graph";
 import { prim } from "../src/tools/algos/ACM";
 
 describe('Test ACM algorithms', () => {
