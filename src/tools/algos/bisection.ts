@@ -40,11 +40,15 @@ export class BisectionApproach {
             return this.success(i);
         if (res > 0) {
             if (this.sign == 1) {
-                this.subrange[0] = Math.floor((this.index + i) / 2);
+                if (this.lastTry != undefined)
+                    this.subrange[0] = Math.floor((this.lastTry + i) / 2);
+                else this.subrange[0] = Math.floor((this.index + i) / 2);
                 if (this.subrange[1] != Infinity)
                     this.offset = Math.round((this.subrange[1] - i) / 2);
             } else {
-                this.subrange[1] = Math.round((this.index + i) / 2);
+                if (this.lastTry != undefined)
+                    this.subrange[1] = Math.round((this.lastTry + i) / 2);
+                else this.subrange[1] = Math.round((this.index + i) / 2);
                 if (this.subrange[0] != -Infinity)
                     this.offset = Math.round((i - this.subrange[0]) / 2);
             }
