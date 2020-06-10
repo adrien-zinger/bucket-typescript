@@ -15,6 +15,10 @@ function closer(index: number) {
     return difference;
 }
 let bisection = new BisectionApproach(closer, range, lastIndex);
-for (let i = 0; i < 10; ++i)
+for (let i = 0; i < 10; ++i) {
     bisection.run();
+    if (bisection.predict) {
+        bisection.run(1);
+    }
+}
 console.log(bisection.result);

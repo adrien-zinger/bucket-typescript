@@ -1,5 +1,7 @@
 export class BisectionApproach {
     private sign: number;
+    // True if the next move will be closer
+    public predict: boolean = false;
     private subrange: number[] = [];
     private index: number;
     public result: number | undefined = undefined;
@@ -33,12 +35,15 @@ export class BisectionApproach {
         return false;
     }
 
-    public run(): boolean {
+    public run(closer?: number): boolean {
         const i = this.index + this.sign * this.offset;
-        const res = this.closer(i);
+        let res = undefined;
+        if (closer == undefined) res = this.closer(i);
+        else res = closer;
         if (res == undefined)
             return this.success(i);
         if (res > 0) {
+            this.predict = false;
             if (this.sign == 1) {
                 if (this.lastTry != undefined)
                     this.subrange[0] = Math.floor((this.lastTry + i) / 2);
@@ -54,6 +59,7 @@ export class BisectionApproach {
             }
             this.index = i;
         } else if (res < 0) {
+            this.predict = true;
             if (this.sign == 1) {
                 this.subrange[1] = Math.round((this.index + i) / 2);
                 if (this.subrange[0] != -Infinity)
@@ -71,5 +77,9 @@ export class BisectionApproach {
         this.lastTry = i;
         if (this.offset == 0) return this.success(i);
         return this.result == undefined;
+    }
+
+    get next() {
+        return this.index + this.sign * this.offset;
     }
 }
