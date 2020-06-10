@@ -1,4 +1,4 @@
-import { BisectionApproach } from "./tools/algos/bisection";
+import { BisectionApproach } from "../src/tools/algos/bisection";
 
 const range: [number, number] = [1, 100];
 const target: number = 57;

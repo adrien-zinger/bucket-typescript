@@ -40,10 +40,10 @@ export class Edges {
         public readonly oriented: boolean = false) {}
 
     public addEdge(edge: Edge) {
-        this.add(edge.a.id, edge.b.id, edge.w);
+        this.set(edge.a.id, edge.b.id, edge.w);
     }
 
-    public add(a: string, b: string, w: number) {
+    public set(a: string, b: string, w: number) {
         this.sizeModif = true;
         if (this.oriented) {
             if (!this.edges.has(a))
@@ -138,34 +138,19 @@ export class Vertex {
 
 export class Vertices {
     private verticesIds: Map<string, number> = new Map();
-    private static sMaxVerticesInstances = 100;
-    private verticesPool: Map<string, Vertex> = new Map();
-
-    private appendInPool(vertex: Vertex) {
-        if (this.verticesPool.size >= Vertices.sMaxVerticesInstances) {
-            const keys = this.verticesPool.keys();
-            for (let i = 0; i < this.verticesPool.size / 2; ++i)
-                this.verticesPool.delete(keys.next().value);
-        }
-        this.verticesPool.set(vertex.id, vertex);
-    }
 
     public addVertex(vertex: Vertex) {
-        this.add(vertex.id, vertex.cost);
+        this.set(vertex.id, vertex.cost);
     }
 
-    public add(id: string, cost: number) {
+    public set(id: string, cost: number) {
         this.verticesIds.set(id, cost);
     }
 
     public get(id: string): Vertex | undefined {
-        if (this.verticesPool.has(id))
-            return this.verticesPool.get(id);
         let ret: Vertex | undefined = undefined;
-        if (this.verticesIds.has(id)) {
-            ret = new Vertex(id);
-            this.appendInPool(ret);
-        }
+        if (this.verticesIds.has(id))
+            ret = new Vertex(id, this.verticesIds.get(id));
         return ret;
     }
 

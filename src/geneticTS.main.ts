@@ -8,10 +8,10 @@ function createCompleteGraph(): Graph {
     let edges: Edges = new Edges(vertices);
     for (let i = 0; i < alphabet.length; ++i) {
         const name: string = alphabet[i];
-        vertices.add(name, 0);
+        vertices.set(name, 0);
         vertices.foreach(vertex => {
             if (vertex.id != name)
-                edges.add(vertex.id, name, Random.range(0, 15));
+                edges.set(vertex.id, name, Random.range(0, 15));
         });
     }
     return new Graph(vertices, edges);

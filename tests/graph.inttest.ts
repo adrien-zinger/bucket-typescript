@@ -5,7 +5,7 @@
  * of N vertices.
  */
 
-import { Vertices, Edges, Vertex } from "./tools/graph";
+import { Vertices, Edges, Vertex } from "../src/tools/graph";
 
 function testBig() {
     const N = 8000;
@@ -17,11 +17,11 @@ function testBig() {
     let vertices = new Vertices();
     let edges = new Edges(vertices, true);
     for (const names of vertexNames) {
-        vertices.add(names, 1);
+        vertices.set(names, 1);
     }
     vertices.foreach((vertex_a: Vertex) => {
         vertices.foreach((vertex_b: Vertex) => {
-            edges.add(vertex_a.id, vertex_b.id, 1);
+            edges.set(vertex_a.id, vertex_b.id, 1);
         })
     });
     console.timeEnd();
