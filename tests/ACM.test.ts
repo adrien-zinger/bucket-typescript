@@ -24,9 +24,9 @@ describe('Test ACM algorithms', () => {
       let vertices: Vertices = new Vertices();
       let edges: Edges = new Edges(vertices);
       for (let n of vertexNames)
-        vertices.add(n[0], 0);
+        vertices.set(n[0], 0);
       for (let e of edgesName)
-        edges.add(e[0], e[1], e[2]);
+        edges.set(e[0], e[1], e[2]);
       let visited = '';
       const g = new Graph(vertices, edges);
       prim(new Set<string>(vertexNames),
