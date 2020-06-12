@@ -3,3 +3,5 @@ package-lock.json
 yarn.lock
 build/
 yarn-error.log
+*.out
+*.log
